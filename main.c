@@ -2,6 +2,7 @@
  * Name:  MP Nibo2
  * Datum: 02.07.12
  * Authors: Victor Ruch, Mike Gerber
+ * Robot: 12
  **/
 
 #include "nibo/niboconfig.h"
@@ -15,11 +16,12 @@
 #include "nibo/leds.h"
 #include "nibo/pwm.h"
 #include "nibo/bot.h"
+#include "nibo/iodefs.h"
 
 #include "mylog.h"
-#include "blink.h"
-#include "turn.h"
+#include "move.h"
 #include "labyrinth.h"
+#include "energy_status.h"
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -82,9 +84,8 @@ int main(void) {
     delay(50);
     leds_set_displaylight(1024);
 
-    // Spannung
-    bot_update();
-    
+    energy_status_check();
+
     // Request distance data
     copro_update();
 
@@ -100,25 +101,11 @@ int main(void) {
 
     log_distance();
     
-    if(dist[2] >= MAX_DISTANCE){  // if wall in front
-      if(dist[1] < dist[3]){ // if wall is closer to front left sensor
-        turn_right();
-      } else {  // or closer to front right sensor
-        turn_left();
-      }
-    } else if (dist[1] >= MAX_DISTANCE) { // if too close to front right sensor
-      turn_left();
-    } else if (dist[3] >= MAX_DISTANCE) { // if too close to front left sensor
-      turn_right();
-    } else { // else just drive straight on
-      copro_setSpeed(10,10);
-    }
+    move_forward();
+    delay(3000);
+    turn_left();
+    delay(3000);
+    //turn_right();
   }
 }
 
-void moveOne(){
-  copro_setSpeed(25, 25); 
-  delay(1100);
-  copro_stopImmediate();
-  delay(50000);
-}
