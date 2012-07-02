@@ -115,3 +115,10 @@ int main(void) {
     }
   }
 }
+
+void moveOne(){
+  copro_setSpeed(25, 25); 
+  delay(1100);
+  copro_stopImmediate();
+  delay(50000);
+}
