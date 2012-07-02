@@ -77,43 +77,42 @@ int main(void) {
   delay(10);
   //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
   copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
-
-  while (1) {
-    delay(50);
-    leds_set_displaylight(1024);
-
-    // Spannung
-    bot_update();
-    
-    // Request distance data
-    copro_update();
-
-    dist[4] = copro_distance[4]/128; // left
-    dist[3] = copro_distance[3]/128; // front left
-    dist[2] = copro_distance[2]/128; // front 
-    dist[1] = copro_distance[1]/128; // front right
-    dist[0] = copro_distance[0]/128; // right
-
-    dist[4] = (dist[4]<250)? (dist[4]+5):255;
-    dist[0] = (dist[0]<250)? (dist[0]+5):255;
-    dist[2] = (dist[2]>5)? (dist[2]-5):0;
-
-    log_distance();
-    
-    if(dist[2] >= MAX_DISTANCE){  // if wall in front
-      if(dist[1] < dist[3]){ // if wall is closer to front left sensor
-        turn_right();
-      } else {  // or closer to front right sensor
-        turn_left();
-      }
-    } else if (dist[1] >= MAX_DISTANCE) { // if too close to front right sensor
-      turn_left();
-    } else if (dist[3] >= MAX_DISTANCE) { // if too close to front left sensor
-      turn_right();
-    } else { // else just drive straight on
-      copro_setSpeed(10,10);
-    }
+ 
   }
+
+void fillLabyrinth {
+  labyrinth[0][0].actions = SOUTH;
+  labyrinth[0][1].actions = EAST+NORTH;
+  labyrinth[0][2].actions = EAST;
+
+  labyrinth[1][0].actions = EAST+SOUTH;
+  labyrinth[1][1].actions = NORTH+WEST+SOUTH;
+  labyrinth[1][2].actions = NORTH+WEST;
+
+  labyrinth[2][0].actions = EAST+SOUTH+WEST;
+  labyrinth[2][1].actions = NORTH+SOUTH;
+  labyrinth[2][2].actions = NORTH;
+
+  labyrinth[3][0].actions = EAST+SOUTH+WEST;
+  labyrinth[3][1].actions = NORTH+EAST;
+  labyrinth[3][2].actions = EAST;
+
+  labyrinth[4][0].actions = EAST+WEST;
+  labyrinth[4][1].actions = EAST+SOUTH+WEST;
+  labyrinth[4][2].actions = EAST+NORTH+WEST;
+
+  labyrinth[5][0].actions = EAST+WEST;
+  labyrinth[5][1].actions = EAST+WEST;
+  labyrinth[5][2].actions = EAST+SOUTH+WEST;
+  labyrinth[5][2].value   = 100;
+
+  labyrinth[6][0].actions = SOUTH+WEST;
+  labyrinth[6][1].actions = EAST+NORTH+WEST;
+  labyrinth[6][2].actions = EAST+WEST;
+
+  labyrinth[7][0].actions = 0;
+  labyrinth[7][1].actions = SOUTH+WEST;
+  labyrinth[7][2].actions = NORTH+WEST;
 }
 
 void moveOne(){
