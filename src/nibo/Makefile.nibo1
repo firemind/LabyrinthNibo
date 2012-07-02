@@ -1,0 +1,70 @@
+
+# Configuration
+TARGET = libnibo
+DEVICE = atmega128
+F_CPU = 16000000
+
+include Makefile.common
+
+
+OBJ_DIR=obj/nibo1
+
+SRC = \
+  display.c \
+  pwm.c \
+  delay.c \
+  i2cmaster.c \
+  adc.c \
+  gfx.c \
+  irco.c \
+  motco.c \
+  text.c \
+  floor.c \
+  bot.c \
+  leds.c \
+
+NO_OBJS =
+
+SVN_REVISION := $(shell svnversion -n)
+
+OBJS = $(SRC:%.c=$(OBJ_DIR)/%.o)
+DEPS = $(SRC:%.c=$(OBJ_DIR)/%.d)
+
+
+# AVR compiler setup
+PREFIX =
+CC = $(PREFIX)avr-gcc
+AR = $(PREFIX)avr-ar
+
+# AVR compiler flags
+CFLAGS = -Os -ffunction-sections -I../../include  -Wall
+CFLAGS += -std=c99
+CFLAGS += -mmcu=$(DEVICE) -DF_CPU=$(F_CPU) -DVERSION="\"$(VERSION)\"" -DSVN_REVISION="\"$(SVN_REVISION)\""
+
+# build lib
+all: $(TARGET).a
+
+$(TARGET).a: $(OBJS)
+	rm -f $(TARGET).a
+	$(AR) -q $(TARGET).a $(OBJS)
+	cp $(TARGET).a ../../lib/
+
+$(OBJ_DIR)/%.o: %.c Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.d: %.c
+	@mkdir -p $(OBJ_DIR)
+	@echo "calculating dependencies for $<"
+	@set -e; $(CC) -MM $(CFLAGS) $< \
+	| sed 's#\($*\)\.o[ :]*#$(OBJ_DIR)/\1.o $@ : #g' > $@ ; \
+	[ -s $@ ] || rm -f $@
+
+
+clean:
+	rm -rf $(OBJ_DIR) *~ $(TARGET).a
+
+include $(DEPS)
+
+.PHONY: clean all
+.SECONDARY: $(OBJS) $(DEPS)
+
