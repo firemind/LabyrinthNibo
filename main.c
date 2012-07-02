@@ -1,6 +1,6 @@
 /**
- * Name:  Pruefung P3d Nibo2
- * Datum: 11.06.12
+ * Name:  MP Nibo2
+ * Datum: 02.07.12
  * Authors: Victor Ruch, Mike Gerber
  **/
 
@@ -19,6 +19,7 @@
 #include "mylog.h"
 #include "blink.h"
 #include "turn.h"
+#include "labyrinth.h"
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -31,7 +32,6 @@
 #define MAX_DISTANCE 0xe5
 
 uint8_t dist[5];
-uint8_t turns = 0;
 
 // prints int as hex 
 void print_hex (uint8_t val) {
@@ -101,26 +101,17 @@ int main(void) {
     log_distance();
     
     if(dist[2] >= MAX_DISTANCE){  // if wall in front
-      turns = turns + 1;
       if(dist[1] < dist[3]){ // if wall is closer to front left sensor
         turn_right();
       } else {  // or closer to front right sensor
         turn_left();
       }
     } else if (dist[1] >= MAX_DISTANCE) { // if too close to front right sensor
-      turns = turns + 1;
       turn_left();
     } else if (dist[3] >= MAX_DISTANCE) { // if too close to front left sensor
-      turns = turns + 1;
       turn_right();
     } else { // else just drive straight on
       copro_setSpeed(10,10);
-    }
-
-    if(turns >= 4) { // if 4 turns have been made
-      turns = 0;
-      // dance crazy
-      blink();
     }
   }
 }
