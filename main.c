@@ -78,9 +78,12 @@ int main(void) {
   //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
   copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
  
-  }
+  fillLabyrinth();
+  moveOne();
+  
+}
 
-void fillLabyrinth {
+void fillLabyrinth() {
   labyrinth[0][0].actions = SOUTH;
   labyrinth[0][1].actions = EAST+NORTH;
   labyrinth[0][2].actions = EAST;
@@ -120,4 +123,30 @@ void moveOne(){
   delay(1100);
   copro_stopImmediate();
   delay(50000);
+}
+
+struct position {
+  int x;
+  int y;
+};
+struct position gedAdjacent (int x, int y, char dir){
+  struct position mypos;
+  mypos.x = x;
+  mypos.y = y;
+  switch(dir){
+    case WEST:  mypos.x -=1; break;
+    case EAST:  mypos.x +=1; break;
+    case SOUTH: mypos.y +=1; break;
+    case NORTH: mypos.y -=1; break;
+  }
+  return mypos;
+}
+
+void calc_value(struct field state, int level){
+  if(state.value != NULL){
+    return;
+  }
+  for(i=0x8;i>=i%=2;
+  
+
 }
