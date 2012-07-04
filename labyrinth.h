@@ -125,7 +125,6 @@ void calculateAdjacentValues(int x, int y){
   } 
 }
 
-
 void calculateValues(){
   int goal_x = 5, goal_y = 2;
   calculateAdjacentValues(goal_x, goal_y);
