@@ -18,7 +18,16 @@ void testFillLabyrinth(void)
    fillLabyrinth();
    
    CU_ASSERT(labyrinth[5][2].value == 100);
-   CU_ASSERT(labyrinth[5][2].actions == 14);
+   CU_ASSERT(labyrinth[5][2].actions == 12);
+
+   calculateValues();
+
+   CU_ASSERT(labyrinth[0][0].value == 37);
+   
+   // calculation should not change value terminal states
+   CU_ASSERT(labyrinth[death_x][death_y].value == -99);
+   CU_ASSERT(labyrinth[goal_x][goal_y].value == 100);
+
 }
 
 int main()
@@ -49,7 +58,6 @@ int main()
    CU_basic_run_tests();
    CU_cleanup_registry();
 
-   calculateValues();
    printLabyrinth();
 
    return CU_get_error();
