@@ -83,40 +83,7 @@ int main(void) {
   
 }
 
-void fillLabyrinth() {
-  labyrinth[0][0].actions = SOUTH;
-  labyrinth[0][1].actions = EAST+NORTH;
-  labyrinth[0][2].actions = EAST;
 
-  labyrinth[1][0].actions = EAST+SOUTH;
-  labyrinth[1][1].actions = NORTH+WEST+SOUTH;
-  labyrinth[1][2].actions = NORTH+WEST;
-
-  labyrinth[2][0].actions = EAST+SOUTH+WEST;
-  labyrinth[2][1].actions = NORTH+SOUTH;
-  labyrinth[2][2].actions = NORTH;
-
-  labyrinth[3][0].actions = EAST+SOUTH+WEST;
-  labyrinth[3][1].actions = NORTH+EAST;
-  labyrinth[3][2].actions = EAST;
-
-  labyrinth[4][0].actions = EAST+WEST;
-  labyrinth[4][1].actions = EAST+SOUTH+WEST;
-  labyrinth[4][2].actions = EAST+NORTH+WEST;
-
-  labyrinth[5][0].actions = EAST+WEST;
-  labyrinth[5][1].actions = EAST+WEST;
-  labyrinth[5][2].actions = EAST+SOUTH+WEST;
-  labyrinth[5][2].value   = 100;
-
-  labyrinth[6][0].actions = SOUTH+WEST;
-  labyrinth[6][1].actions = EAST+NORTH+WEST;
-  labyrinth[6][2].actions = EAST+WEST;
-
-  labyrinth[7][0].actions = 0;
-  labyrinth[7][1].actions = SOUTH+WEST;
-  labyrinth[7][2].actions = NORTH+WEST;
-}
 
 void moveOne(){
   copro_setSpeed(25, 25); 
