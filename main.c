@@ -79,7 +79,13 @@ int main(void) {
   delay(10);
   //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
   copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
+ 
+  fillLabyrinth();
+  moveOne();
+  
+}
 
+<<<<<<< HEAD
   while (1) {
     delay(50);
     leds_set_displaylight(1024);
@@ -109,3 +115,72 @@ int main(void) {
   }
 }
 
+=======
+void fillLabyrinth() {
+  labyrinth[0][0].actions = SOUTH;
+  labyrinth[0][1].actions = EAST+NORTH;
+  labyrinth[0][2].actions = EAST;
+
+  labyrinth[1][0].actions = EAST+SOUTH;
+  labyrinth[1][1].actions = NORTH+WEST+SOUTH;
+  labyrinth[1][2].actions = NORTH+WEST;
+
+  labyrinth[2][0].actions = EAST+SOUTH+WEST;
+  labyrinth[2][1].actions = NORTH+SOUTH;
+  labyrinth[2][2].actions = NORTH;
+
+  labyrinth[3][0].actions = EAST+SOUTH+WEST;
+  labyrinth[3][1].actions = NORTH+EAST;
+  labyrinth[3][2].actions = EAST;
+
+  labyrinth[4][0].actions = EAST+WEST;
+  labyrinth[4][1].actions = EAST+SOUTH+WEST;
+  labyrinth[4][2].actions = EAST+NORTH+WEST;
+
+  labyrinth[5][0].actions = EAST+WEST;
+  labyrinth[5][1].actions = EAST+WEST;
+  labyrinth[5][2].actions = EAST+SOUTH+WEST;
+  labyrinth[5][2].value   = 100;
+
+  labyrinth[6][0].actions = SOUTH+WEST;
+  labyrinth[6][1].actions = EAST+NORTH+WEST;
+  labyrinth[6][2].actions = EAST+WEST;
+
+  labyrinth[7][0].actions = 0;
+  labyrinth[7][1].actions = SOUTH+WEST;
+  labyrinth[7][2].actions = NORTH+WEST;
+}
+
+void moveOne(){
+  copro_setSpeed(25, 25); 
+  delay(1100);
+  copro_stopImmediate();
+  delay(50000);
+}
+
+struct position {
+  int x;
+  int y;
+};
+struct position gedAdjacent (int x, int y, char dir){
+  struct position mypos;
+  mypos.x = x;
+  mypos.y = y;
+  switch(dir){
+    case WEST:  mypos.x -=1; break;
+    case EAST:  mypos.x +=1; break;
+    case SOUTH: mypos.y +=1; break;
+    case NORTH: mypos.y -=1; break;
+  }
+  return mypos;
+}
+
+void calc_value(struct field state, int level){
+  if(state.value != NULL){
+    return;
+  }
+  for(i=0x8;i>=i%=2;
+  
+
+}
+>>>>>>> 25b2f908ded57aecef37594b412c88329262408e
