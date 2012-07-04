@@ -83,9 +83,6 @@ int main(void) {
   fillLabyrinth();
   moveOne();
   
-}
-
-<<<<<<< HEAD
   while (1) {
     delay(50);
     leds_set_displaylight(1024);
@@ -115,7 +112,6 @@ int main(void) {
   }
 }
 
-=======
 void fillLabyrinth() {
   labyrinth[0][0].actions = SOUTH;
   labyrinth[0][1].actions = EAST+NORTH;
@@ -151,17 +147,6 @@ void fillLabyrinth() {
   labyrinth[7][2].actions = NORTH+WEST;
 }
 
-void moveOne(){
-  copro_setSpeed(25, 25); 
-  delay(1100);
-  copro_stopImmediate();
-  delay(50000);
-}
-
-struct position {
-  int x;
-  int y;
-};
 struct position gedAdjacent (int x, int y, char dir){
   struct position mypos;
   mypos.x = x;
@@ -179,8 +164,5 @@ void calc_value(struct field state, int level){
   if(state.value != NULL){
     return;
   }
-  for(i=0x8;i>=i%=2;
-  
-
+  //for(i=0x8;i>=i%=2;
 }
->>>>>>> 25b2f908ded57aecef37594b412c88329262408e

@@ -14,6 +14,9 @@ struct field {
   int value;
 } labyrinth[LAB_WIDTH][LAB_HEIGHT];
 
-
+struct position {
+  int x;
+  int y;
+};
 
 #endif /*LABYRINTH_H*/
