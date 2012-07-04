@@ -45,6 +45,7 @@ void print_hex (uint8_t val) {
   gfx_print_char(c2);
 }
 
+
 // Logs the distance from all proximity sensors in hex.
 void log_distance() {
     gfx_move(25, 20);
@@ -59,58 +60,6 @@ void log_distance() {
     print_hex(dist[4]);
 }
 
-int main(void) {
-  sei(); // enable interrupts
-  leds_init();
-  pwm_init();
-  bot_init();
-  spi_init();
-  floor_init();
-  floor_readPersistent();
-
-  if (display_init()!=0) {
-    leds_set_displaylight(50);
-    if (display_type==2) {
-      gfx_init();
-    }
-  }
-
-  copro_ir_startMeasure();
-  delay(10);
-  //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
-  copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
- 
-  fillLabyrinth();
-  moveOne();
-  
-  while (1) {
-    delay(50);
-    leds_set_displaylight(1024);
-
-    energy_status_check();
-
-    // Request distance data
-    copro_update();
-
-    dist[4] = copro_distance[4]/128; // left
-    dist[3] = copro_distance[3]/128; // front left
-    dist[2] = copro_distance[2]/128; // front 
-    dist[1] = copro_distance[1]/128; // front right
-    dist[0] = copro_distance[0]/128; // right
-
-    dist[4] = (dist[4]<250)? (dist[4]+5):255;
-    dist[0] = (dist[0]<250)? (dist[0]+5):255;
-    dist[2] = (dist[2]>5)? (dist[2]-5):0;
-
-    log_distance();
-    
-    move_forward();
-    delay(3000);
-    turn_left();
-    delay(3000);
-    //turn_right();
-  }
-}
 
 void fillLabyrinth() {
   labyrinth[0][0].actions = SOUTH;
@@ -147,6 +96,7 @@ void fillLabyrinth() {
   labyrinth[7][2].actions = NORTH+WEST;
 }
 
+
 struct position gedAdjacent (int x, int y, char dir){
   struct position mypos;
   mypos.x = x;
@@ -160,9 +110,62 @@ struct position gedAdjacent (int x, int y, char dir){
   return mypos;
 }
 
+
 void calc_value(struct field state, int level){
   if(state.value != NULL){
     return;
   }
   //for(i=0x8;i>=i%=2;
+}
+
+
+int main(void) {
+  sei(); // enable interrupts
+  leds_init();
+  pwm_init();
+  bot_init();
+  spi_init();
+  floor_init();
+  floor_readPersistent();
+
+  if (display_init()!=0) {
+    leds_set_displaylight(50);
+    if (display_type==2) {
+      gfx_init();
+    }
+  }
+
+  copro_ir_startMeasure();
+  delay(10);
+  //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
+  copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
+ 
+  fillLabyrinth();
+  
+  while (1) {
+    leds_set_displaylight(1024);
+
+    energy_status_check();
+
+    // Request distance data
+    copro_update();
+
+    dist[4] = copro_distance[4]/128; // left
+    dist[3] = copro_distance[3]/128; // front left
+    dist[2] = copro_distance[2]/128; // front 
+    dist[1] = copro_distance[1]/128; // front right
+    dist[0] = copro_distance[0]/128; // right
+
+    dist[4] = (dist[4]<250)? (dist[4]+5):255;
+    dist[0] = (dist[0]<250)? (dist[0]+5):255;
+    dist[2] = (dist[2]>5)? (dist[2]-5):0;
+
+    log_distance();
+    
+    move_forward();
+    delay(3000);
+    turn_left();
+    delay(3000);
+    //turn_right();
+  }
 }
