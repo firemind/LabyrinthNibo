@@ -26,10 +26,26 @@
 #define gamma 0.9
 #define epsilon 0.001
 
+#define UNKNOWN  0 
+#define EXPLORED 1
+#define FRONTIER 2
+
 struct field {
   char actions;
   int value;
+  int state; // UNKNOWN, EXPLORED or FRONTIER
 } labyrinth[LAB_WIDTH][LAB_HEIGHT];
+
+struct coord {
+  int x;
+  int y;
+};
+
+struct coord getNext();
+void addToFrontier(int x, int y, int cost);
+int estimatedMovingCost(int fx, int fy, int tx, int ty);
+int totalCost(int x, int y);
+
 
 void fillLabyrinth() {
   labyrinth[0][0].actions = SOUTH;
@@ -64,8 +80,9 @@ void fillLabyrinth() {
   labyrinth[7][1].actions = SOUTH+WEST;
   labyrinth[7][2].actions = NORTH+WEST;
 
-  labyrinth[death_x][death_y].value = -99;
-  labyrinth[goal_x][goal_y].value   = 100;
+//  labyrinth[death_x][death_y].value = -99;
+//  labyrinth[goal_x][goal_y].value   = 100;
+  addToFrontier(0, 0, 0);
 }
 
 void printLabyrinth(){
@@ -156,11 +173,67 @@ int calculateAdjacentValues(int x, int y){
   return labyrinth[x][y].value;
 }
 
-int valueOf(int x, int y){
-  return labyrinth[x][y].value; 
+int calculateValues(){
+  while(0==0) {
+    struct coord n = getNext();
+   // printf("next: %i, %i\n",n.x, n.y);
+    if (n.x == goal_x && n.y == goal_y){ return 0; }
+    struct field f = labyrinth[n.x][n.y];
+    if(f.actions & NORTH){
+      addToFrontier(n.x,n.y-1, f.value + MOVING_COST);
+    }
+    if(f.actions & SOUTH){
+      addToFrontier(n.x,n.y+1, f.value + MOVING_COST);
+    }
+    if(f.actions & WEST){
+      addToFrontier(n.x-1,n.y, f.value + MOVING_COST);
+    }
+    if(f.actions & EAST){
+      addToFrontier(n.x+1,n.y, f.value + MOVING_COST);
+    }
+  }
 }
 
-void calculateValues(){
-  calculateAdjacentValues(start_x, start_y);
+void addToFrontier(int x, int y, int cost){
+  if (labyrinth[x][y].state == UNKNOWN){
+    labyrinth[x][y].value = cost;
+    labyrinth[x][y].state = FRONTIER;
+    printf("added: %i, %i\n",x, y);
+  }
 }
+
+struct coord getNext(){
+  int i,j;
+  struct coord c;
+  c.x = 0, c.y = 0;
+  for(i = 0;i<LAB_WIDTH;i++){ // Every Col
+    for(j = 0;j<LAB_HEIGHT;j++){ // Every Field
+      if (labyrinth[i][j].state == FRONTIER){
+        printf("total cost %i, %i: %i\n", i, j, totalCost(i,j));
+        printf("total cost %i, %i: %i\n", c.x, c.y, totalCost(c.x,c.y));
+        if (totalCost(i,j) < totalCost(c.x, c.y)
+            || labyrinth[c.x][c.y].state != FRONTIER
+            ){
+          c.x = i;
+          c.y = j;
+        }
+      }
+    }
+  }
+  labyrinth[c.x][c.y].state = EXPLORED;
+  return c;
+}
+
+int totalCost(int x, int y){
+ return labyrinth[x][y].value + estimatedMovingCost(x, y, goal_x, goal_y);
+}
+
+int estimatedMovingCost(int fx, int fy, int tx, int ty){
+  return (abs(fx -tx) + abs(fy - ty)) * MOVING_COST;
+}
+
+int valueOf(int x, int y){
+  return labyrinth[x][y].value;
+}
+
 #endif /*LABYRINTH_H*/
