@@ -41,11 +41,18 @@ struct coord {
   int y;
 };
 
-struct coord getNext();
-void addToFrontier(int x, int y, int cost);
+struct node {
+  struct node *parent;
+  struct coord coord;
+} frontier[24], explored[100];
+
+struct node *getNext();
+void addToFrontier(int x, int y, int cost, struct node *p);
 int estimatedMovingCost(int fx, int fy, int tx, int ty);
 int totalCost(int x, int y);
 
+int fc = 0; // Counter for nodes in frontier array
+int ec = 0; // Counter for nodes in explored array
 
 void fillLabyrinth() {
   labyrinth[0][0].actions = SOUTH;
@@ -82,7 +89,7 @@ void fillLabyrinth() {
 
 //  labyrinth[death_x][death_y].value = -99;
 //  labyrinth[goal_x][goal_y].value   = 100;
-  addToFrontier(0, 0, 0);
+  addToFrontier(0, 0, 0, NULL);
 }
 
 void printLabyrinth(){
@@ -175,53 +182,74 @@ int calculateAdjacentValues(int x, int y){
 
 int calculateValues(){
   while(0==0) {
-    struct coord n = getNext();
-   // printf("next: %i, %i\n",n.x, n.y);
-    if (n.x == goal_x && n.y == goal_y){ return 0; }
+    struct node *next = getNext();
+    struct coord n = next->coord;
+    printf("next: %i, %i\n",n.x, n.y);
+    if (n.x == goal_x && n.y == goal_y){ 
+      while(next != NULL){
+         labyrinth[next->coord.x][next->coord.y].value = 100;
+
+         //printf("parent coord: %i,%i\n", next->coord.x, next->coord.y);
+         next = next->parent;
+      }
+      return 0; }
     struct field f = labyrinth[n.x][n.y];
     if(f.actions & NORTH){
-      addToFrontier(n.x,n.y-1, f.value + MOVING_COST);
+      addToFrontier(n.x,n.y-1, f.value + MOVING_COST, next);
     }
     if(f.actions & SOUTH){
-      addToFrontier(n.x,n.y+1, f.value + MOVING_COST);
+      addToFrontier(n.x,n.y+1, f.value + MOVING_COST, next);
     }
     if(f.actions & WEST){
-      addToFrontier(n.x-1,n.y, f.value + MOVING_COST);
+      addToFrontier(n.x-1,n.y, f.value + MOVING_COST, next);
     }
     if(f.actions & EAST){
-      addToFrontier(n.x+1,n.y, f.value + MOVING_COST);
+      addToFrontier(n.x+1,n.y, f.value + MOVING_COST, next);
     }
   }
 }
 
-void addToFrontier(int x, int y, int cost){
+void addToFrontier(int x, int y, int cost, struct node *p){
   if (labyrinth[x][y].state == UNKNOWN){
+    struct node n;
+    struct coord c;
+    c.x = x, c.y = y;
+    n.parent = p;
+    n.coord = c;
+    int pos = fc++;
+    frontier[pos] = n;
+    printf("pos: %i\n",pos);
+
     labyrinth[x][y].value = cost;
-    labyrinth[x][y].state = FRONTIER;
     printf("added: %i, %i\n",x, y);
+    //printf("coords: %i,%i\n",frontier[fc-1].coord.x,frontier[fc-1].coord.y);
+    if (&n == n.parent){
+       printf("ERROR!\n");
+    }
   }
 }
 
-struct coord getNext(){
-  int i,j;
-  struct coord c;
-  c.x = 0, c.y = 0;
-  for(i = 0;i<LAB_WIDTH;i++){ // Every Col
-    for(j = 0;j<LAB_HEIGHT;j++){ // Every Field
-      if (labyrinth[i][j].state == FRONTIER){
-        printf("total cost %i, %i: %i\n", i, j, totalCost(i,j));
-        printf("total cost %i, %i: %i\n", c.x, c.y, totalCost(c.x,c.y));
-        if (totalCost(i,j) < totalCost(c.x, c.y)
-            || labyrinth[c.x][c.y].state != FRONTIER
-            ){
-          c.x = i;
-          c.y = j;
-        }
-      }
+struct node *getNext(){
+  int i, rmp = 0;
+  struct coord best = frontier[0].coord;
+  printf("best: %i,%i\n",best.x,best.y);
+  for(i=0;i<fc;i++){
+    struct coord alt = frontier[i].coord;
+    if (totalCost(alt.x, alt.y) < totalCost(best.x, best.y)
+    ){
+      best = alt;
+      rmp = i;
     }
   }
-  labyrinth[c.x][c.y].state = EXPLORED;
-  return c;
+  printf("fc: %i\n",fc);
+  explored[ec++] = frontier[rmp];
+  // cleanup frontier array
+  for(i=0;rmp+i<fc;i++){
+    frontier[rmp+i] = frontier[rmp+i+1];
+  }
+  fc--;
+  labyrinth[best.x][best.y].state = EXPLORED;
+  return &explored[ec-1];
 }
 
 int totalCost(int x, int y){
