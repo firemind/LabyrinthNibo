@@ -23,4 +23,22 @@ void pillar_check(uint8_t *dist){
   mylog(text);
 }
 
+bool wallInFront(){
+  uint8_t dist = copro_distance[2]/128;
+  //this needs finetuning
+  return dist > 0xCC;
+}
+
+bool wallLeft(){
+  uint8_t dist = copro_distance[4]/128;
+  //this needs finetuning
+  return dist > 0xCC;
+}
+
+bool wallRight(){
+  uint8_t dist = copro_distance[0]/128;
+  //this needs finetuning
+  return dist > 0xCC;
+}
+
 #endif /*OBSTACLECHECKS_H*/

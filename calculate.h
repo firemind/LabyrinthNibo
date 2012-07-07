@@ -6,11 +6,6 @@
 #define FRONTIER_SIZE 24
 #define EXPLORED_SIZE 24
 
-struct coord {
-  int x;
-  int y;
-};
-
 struct node {
   struct node *parent;
   struct coord coord;
@@ -69,7 +64,6 @@ void addToFrontier(int x, int y, int cost, struct node *p){
     if (&n == n.parent){
        // this should never happen
        printf("ERROR!\n");
-       exit(1);
     }
   }
 }

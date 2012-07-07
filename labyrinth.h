@@ -1,11 +1,6 @@
 #ifndef LABYRINTH_H
 #define LABYRINTH_H
 
-#define NORTH 0x01
-#define SOUTH 0x02
-#define WEST 0x04
-#define EAST 0x08
-
 #define LAB_WIDTH 8
 #define LAB_HEIGHT 3
 
@@ -25,7 +20,7 @@ struct field {
   int state; // UNKNOWN, EXPLORED or FRONTIER
 } labyrinth[LAB_WIDTH][LAB_HEIGHT];
 
-void fillLabyrinth() {
+void fillLabyrinth(struct field labyrinth[LAB_WIDTH][LAB_HEIGHT]) {
 
   labyrinth[0][0].actions = SOUTH;
   labyrinth[0][1].actions = EAST+NORTH;
@@ -61,7 +56,21 @@ void fillLabyrinth() {
 
 }
 
-void printLabyrinth(){
+char dirsym(){
+  switch(current_direction){
+    case WEST:
+      return '<';
+    case EAST:
+      return '>';
+    case SOUTH:
+      return 'v';
+    case NORTH:
+      return '^';
+  }
+
+}
+
+void printLabyrinth(struct field labyrinth[LAB_WIDTH][LAB_HEIGHT]){
   int i,j;
   for(i = 0;i<LAB_HEIGHT;i++){ // Every Row
     // top
@@ -76,9 +85,17 @@ void printLabyrinth(){
     // middle
     for(j = 0;j<LAB_WIDTH;j++){ // Every Cell
       if (labyrinth[j][i].actions & WEST){
-        printf(" %3i", labyrinth[j][i].value);
+        if (current_position.x == j && current_position.y == i){
+          printf("  %c ", dirsym());
+        }else{
+          printf(" %3i", labyrinth[j][i].value);
+        }
       }else{
-        printf("|%3i", labyrinth[j][i].value);
+        if (current_position.x == j && current_position.y == i){
+          printf("| %c ", dirsym());
+        }else{
+          printf("|%3i", labyrinth[j][i].value);
+        }
       }
       if (j == LAB_WIDTH - 1) {
         if (labyrinth[j][i].actions & EAST){
