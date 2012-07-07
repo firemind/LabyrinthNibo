@@ -2,6 +2,7 @@
 #include <string.h>
 #include "CUnit/Basic.h"
 #include "../labyrinth.h"
+#include "../calculate.h"
 
 int init_suite1(void)
 {
@@ -13,22 +14,38 @@ int clean_suite1(void)
   return 0;
 }
 
-void testFillLabyrinth(void)
+void testBestPath(void)
 {
    fillLabyrinth();
-   
-   CU_ASSERT(labyrinth[5][2].value == 100);
+   CU_ASSERT(labyrinth[0][0].actions == 2);
+   CU_ASSERT(labyrinth[5][2].value == 0);
    CU_ASSERT(labyrinth[5][2].actions == 12);
 
    calculateValues();
+   CU_ASSERT(labyrinth[0][0].value == 100);
+   CU_ASSERT(labyrinth[3][1].value == 100);
 
-   CU_ASSERT(labyrinth[0][0].value == 37);
-   
-   // calculation should not change value terminal states
-   CU_ASSERT(labyrinth[death_x][death_y].value == -99);
-   CU_ASSERT(labyrinth[goal_x][goal_y].value == 100);
-
+   printLabyrinth();
+   cleanup();
 }
+
+void testBestPathWithTraps(void)
+{
+   fillLabyrinth();
+   labyrinth[4][1].value = -99; // This field is a trap
+   CU_ASSERT(labyrinth[0][0].actions == 2);
+   CU_ASSERT(labyrinth[5][2].value == 0);
+   CU_ASSERT(labyrinth[5][2].actions == 12);
+
+   calculateValues();
+   CU_ASSERT(labyrinth[0][0].value == 100);
+   CU_ASSERT(labyrinth[3][1].value == 0); // This should not be part of the best path
+   CU_ASSERT(labyrinth[7][1].value == 100); // This should now be part of the best path
+
+   printLabyrinth();
+   cleanup();
+}
+
 
 int main()
 {
@@ -45,12 +62,16 @@ int main()
       return CU_get_error();
    }
 
-   /* add the tests to the suite */
-   /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
-   if (NULL == CU_add_test(pSuite, "test of fillLabyrinth()", testFillLabyrinth))
+   if (NULL == CU_add_test(pSuite, "test calculateValues in standard labyrinth)", testBestPath))
    {
       CU_cleanup_registry();
       return CU_get_error();
+   }
+
+   if (NULL == CU_add_test(pSuite, "test calculateValues with traps ", testBestPathWithTraps))
+   {
+     CU_cleanup_registry();
+     return CU_get_error();
    }
 
    /* Run all tests using the CUnit Basic interface */
@@ -58,7 +79,6 @@ int main()
    CU_basic_run_tests();
    CU_cleanup_registry();
 
-   printLabyrinth();
 
    return CU_get_error();
 }
