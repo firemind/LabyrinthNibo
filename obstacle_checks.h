@@ -26,22 +26,54 @@ void pillar_check(uint8_t *dist){
 }
 
 char wallFront(){
+  int truecount = 0;
+  int falsecount = 0;
   copro_update();
   uint8_t dist = copro_distance[2]/128;
-  //this needs finetuning
-  return dist > 0x40;
+  int i;
+  for(i; i < 5; i++){
+    if(dist > 0x40){
+      truecount++;
+    }else{
+      falsecount++;
+    }
+    delay(50);
+  }
+  return truecount > falsecount;
 }
 
 char wallLeft(){
+  int truecount = 0;
+  int falsecount = 0;
+  copro_update();
   uint8_t dist = copro_distance[4]/128;
-  //this needs finetuning
-  return dist > 0x3A;
+  int i;
+  for(i; i < 5; i++){
+    if(dist > dist > 0x3A){
+      truecount++;
+    }else{
+      falsecount++;
+    }
+    delay(50);
+  }
+  return truecount > falsecount;
 }
 
 char wallRight(){
+  int truecount = 0;
+  int falsecount = 0;
+  copro_update();
   uint8_t dist = copro_distance[0]/128;
-  //this needs finetuning
-  return dist > 0x3A;
+  int i;
+  for(i; i < 5; i++){
+    if(dist > dist > 0x3A){
+      truecount++;
+    }else{
+      falsecount++;
+    }
+    delay(50);
+  }
+  return truecount > falsecount;
 }
 
 #endif /*OBSTACLECHECKS_H*/
