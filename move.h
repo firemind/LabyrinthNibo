@@ -36,11 +36,20 @@ void turn_right() {
 }
 
 void turn_left() {
-  copro_setSpeed(-15,20);
-  _delay_ms(1000);
-  copro_setSpeed(-20, 20);
-  _delay_ms(1000);
-  copro_stopImmediate();
+  copro_setSpeed(-25,50);
+  _delay_ms(400);
+  
+  copro_stopImmediate(); _delay_ms(250);
+
+  copro_setSpeed(-25, 0);
+  _delay_ms(540);
+
+  copro_stopImmediate(); _delay_ms(250);
+
+  copro_setSpeed(0, -25);
+  _delay_ms(510);
+  copro_stopImmediate(); _delay_ms(250);
+
   switch(current_direction){
     case WEST:
       current_direction = SOUTH; break;
