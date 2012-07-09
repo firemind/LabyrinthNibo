@@ -26,6 +26,8 @@
 #include "move.h"
 #include "obstacle_checks.h"
 #include "phase1.h"
+#include "phase2.h"
+#include "phase3.h"
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -64,28 +66,6 @@ void log_distance() {
     print_hex(dist[4]);
 }
 
-/*struct cord gedAdjacent (int x, int y, char dir){
-  struct cord mypos;
-  mypos.x = x;
-  mypos.y = y;
-  switch(dir){
-    case WEST:  mypos.x -=1; break;
-    case EAST:  mypos.x +=1; break;
-    case SOUTH: mypos.y +=1; break;
-    case NORTH: mypos.y -=1; break;
-  }
-  return mypos;
-}*/
-
-
-void calc_value(struct field state, int level){
-  if(state.value != NULL){
-    return;
-  }
-  //for(i=0x8;i>=i%=2;
-}
-
-
 int main(void) {
   sei(); // enable interrupts
   leds_init();
@@ -106,29 +86,14 @@ int main(void) {
   delay(10);
   //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
   copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
+
+  energy_status_check();
  
-  fillLabyrinth(labyrinth);
-  
-  while (1) {
+  while (1==1) {
     leds_set_displaylight(1024);
 
-    energy_status_check();
-
-    // Request distance data
-    copro_update();
-
-    dist[4] = copro_distance[4]/128; // left
-    dist[3] = copro_distance[3]/128; // front left
-    dist[2] = copro_distance[2]/128; // front 
-    dist[1] = copro_distance[1]/128; // front right
-    dist[0] = copro_distance[0]/128; // right
-
-    dist[4] = (dist[4]<250)? (dist[4]+5):255;
-    dist[0] = (dist[0]<250)? (dist[0]+5):255;
-    dist[2] = (dist[2]>5)? (dist[2]-5):0;
-
-    log_distance();
-
-    if (!onGoal) walkthru();
+    doPhase1();
+    doPhase2();
+    doPhase3();
    }
 }
