@@ -26,21 +26,22 @@ void pillar_check(uint8_t *dist){
 }
 
 char wallFront(){
+  copro_update();
   uint8_t dist = copro_distance[2]/128;
   //this needs finetuning
-  return dist > 0xCC;
+  return dist > 0x40;
 }
 
 char wallLeft(){
   uint8_t dist = copro_distance[4]/128;
   //this needs finetuning
-  return dist > 0xCC;
+  return dist > 0x3A;
 }
 
 char wallRight(){
   uint8_t dist = copro_distance[0]/128;
   //this needs finetuning
-  return dist > 0xCC;
+  return dist > 0x3A;
 }
 
 #endif /*OBSTACLECHECKS_H*/
