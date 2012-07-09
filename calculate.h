@@ -5,6 +5,7 @@
 
 #define FRONTIER_SIZE 24
 #define EXPLORED_SIZE 24
+#define NULL 0
 
 struct node {
   struct node *parent;
@@ -62,7 +63,7 @@ void addToFrontier(int x, int y, int cost, struct node *p, struct environment *e
     /*printf("Adding to frontier %i,%i!\n", x,y);*/
     struct node n;
     struct coord c;
-    c.x = x, c.y = y;
+    c.x = x; c.y = y;
     n.parent = p;
     n.coord = c;
     n.cost = cost;

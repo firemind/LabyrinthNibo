@@ -18,9 +18,12 @@
 #include "nibo/bot.h"
 #include "nibo/iodefs.h"
 
+#include "helper.h"
+#include "phase1.h"
+#include "labyrinth.h"
+#include "calculate.h"
 #include "mylog.h"
 #include "move.h"
-#include "labyrinth.h"
 #include "energy_status.h"
 
 #include <avr/interrupt.h>
@@ -60,12 +63,8 @@ void log_distance() {
     print_hex(dist[4]);
 }
 
-
-
-
-
-struct position gedAdjacent (int x, int y, char dir){
-  struct position mypos;
+/*struct cord gedAdjacent (int x, int y, char dir){
+  struct cord mypos;
   mypos.x = x;
   mypos.y = y;
   switch(dir){
@@ -75,7 +74,7 @@ struct position gedAdjacent (int x, int y, char dir){
     case NORTH: mypos.y -=1; break;
   }
   return mypos;
-}
+}*/
 
 
 void calc_value(struct field state, int level){
@@ -107,7 +106,7 @@ int main(void) {
   //motco_setSpeedParameters(5, 4, 6); // ki, kp, kd
   copro_setSpeedParameters(15, 20, 10); // ki, kp, kd
  
-  fillLabyrinth();
+  fillLabyrinth(labyrinth);
   
   while (1) {
     leds_set_displaylight(1024);

@@ -14,5 +14,4 @@ struct coord {
 char current_direction = SOUTH;
 struct coord current_position = {0,0};
 
-
 #endif /*HELPER_H*/
