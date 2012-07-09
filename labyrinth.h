@@ -1,7 +1,7 @@
 #ifndef LABYRINTH_H
 #define LABYRINTH_H
 
-#define LAB_WIDTH 8
+#define LAB_WIDTH 5
 #define LAB_HEIGHT 3
 
 #define start_x 0

@@ -99,33 +99,4 @@ void move_east() {
   }
   move_forward();
 }
-
-char nextAction(){
-  char bestAction = 0;
-  int bestValue = -10000;
-  char actions = labyrinth[current_position.x][current_position.y].actions;
-  
-  if ((actions & NORTH) && labyrinth[current_position.x][current_position.y - 1].value > bestValue){
-    bestAction  = NORTH;
-    bestValue = labyrinth[current_position.x][current_position.y - 1].value;
-  }
-
-  if ((actions & WEST) && labyrinth[current_position.x - 1][current_position.y].value > bestValue){
-    bestAction  = WEST;
-    bestValue = labyrinth[current_position.x - 1][current_position.y].value;
-  }
-
-  if ((actions & SOUTH) && labyrinth[current_position.x][current_position.y + 1].value > bestValue){
-    bestAction = SOUTH;
-    bestValue = labyrinth[current_position.x][current_position.y + 1].value;
-  }
-
-  if ((actions & EAST) && labyrinth[current_position.x - 1][current_position.y].value > bestValue){
-    bestAction = EAST;
-    bestValue = labyrinth[current_position.x - 1][current_position.y].value;
-  }
-
-  return bestAction;
-}
-
 #endif /*MOVE_H*/

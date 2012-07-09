@@ -89,7 +89,7 @@ void readActions(){
 }
 
 int onGoal(){
-  return groundBlack();
+  return 0;//groundBlack();
 }
 
 void doPhase1(){
