@@ -3,9 +3,11 @@
 
 #include "nibo/iodefs.h"
 #include <stdio.h>
+#define FALSE 0
+#define TRUE 1
 
 int pillar_count = 0;
-bool pillar_started = false;
+char pillar_started = FALSE;
 
 void pillar_check(uint8_t *dist){
   // seeting leds
@@ -13,29 +15,29 @@ void pillar_check(uint8_t *dist){
   uint8_t ledgreen = 0x00;
 
   // left sensor: led 2
-  if(dist[4] > 0xCC && !pillar_started) pillar_started = true;
+  if(dist[4] > 0xCC && !pillar_started) pillar_started = TRUE;
   else if(dist[4] <= 0xCC && pillar_started){
     pillar_count += 1; 
-    pillar_started = false;
+    pillar_started = FALSE;
   }
   char text[255] ="";
   sprintf(text, "Count: %i", pillar_count);
   mylog(text);
 }
 
-bool wallInFront(){
+char wallFront(){
   uint8_t dist = copro_distance[2]/128;
   //this needs finetuning
   return dist > 0xCC;
 }
 
-bool wallLeft(){
+char wallLeft(){
   uint8_t dist = copro_distance[4]/128;
   //this needs finetuning
   return dist > 0xCC;
 }
 
-bool wallRight(){
+char wallRight(){
   uint8_t dist = copro_distance[0]/128;
   //this needs finetuning
   return dist > 0xCC;

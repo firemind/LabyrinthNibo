@@ -18,13 +18,14 @@
 #include "nibo/bot.h"
 #include "nibo/iodefs.h"
 
+#include "energy_status.h"
 #include "helper.h"
-#include "phase1.h"
 #include "labyrinth.h"
 #include "calculate.h"
 #include "mylog.h"
 #include "move.h"
-#include "energy_status.h"
+#include "obstacle_checks.h"
+#include "phase1.h"
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -127,11 +128,7 @@ int main(void) {
     dist[2] = (dist[2]>5)? (dist[2]-5):0;
 
     log_distance();
-    
-    move_forward();
-    delay(3000);
-    turn_left();
-    delay(3000);
-    //turn_right();
-  }
+
+    if (!onGoal) walkthru();
+   }
 }
