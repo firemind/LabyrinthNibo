@@ -5,8 +5,9 @@
 
 void move_forward() {
   copro_setSpeed(20, 20); 
-  delay(2500);
+  delay(2100);
   copro_stopImmediate();
+  delay(500);
   switch(current_direction){
     case WEST:
       current_position.x -= 1; break;
@@ -21,8 +22,10 @@ void move_forward() {
 
 void turn_right() {
   copro_setSpeed(20,-20);
-  _delay_ms(650);
+  delay(675);
   copro_stopImmediate();
+  delay(500);
+
   switch(current_direction){
     case WEST:
       current_direction = NORTH; break;
@@ -37,8 +40,9 @@ void turn_right() {
 
 void turn_left() {
   copro_setSpeed(-20,20);
-  _delay_ms(650);
+  delay(680);
   copro_stopImmediate();
+  delay(500);
 
   switch(current_direction){
     case WEST:

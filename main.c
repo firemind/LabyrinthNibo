@@ -92,6 +92,9 @@ int main(void) {
   while (1==1) {
     leds_set_displaylight(1024);
 
+    current_position.x = 0;
+    current_position.y = 0;
+    current_direction = SOUTH;
     doPhase1();
     doPhase2();
     doPhase3();
