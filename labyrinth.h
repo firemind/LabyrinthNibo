@@ -9,15 +9,13 @@
 
 #define UNKNOWN  0 
 #define EXPLORED 1
-#define FRONTIER 2
 
-int goal_x = 5;
-int goal_y = 2;
+/*int goal_x = 5;*/
+/*int goal_y = 2;*/
 
 struct field {
   char actions;
   int value;
-  int state; // UNKNOWN, EXPLORED or FRONTIER
 } labyrinth[LAB_WIDTH][LAB_HEIGHT];
 
 void fillLabyrinth(struct field labyrinth[LAB_WIDTH][LAB_HEIGHT]) {
@@ -71,6 +69,7 @@ char dirsym(){
 }
 
 void printLabyrinth(struct field labyrinth[LAB_WIDTH][LAB_HEIGHT]){
+  printf("\n");
   int i,j;
   for(i = 0;i<LAB_HEIGHT;i++){ // Every Row
     // top

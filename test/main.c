@@ -51,8 +51,10 @@ int wallFront(){
       return !(hidden_laby[current_position.x][current_position.y].actions & NORTH);
   }
 }; 
-int groundBlack(){return (current_position.x == goal_x && current_position.y == goal_y); }
+int groundBlack(){return (current_position.x == 5 && current_position.y == 2); }
 #include "../phase1.h"
+
+#include "../phase2.h"
 
 int init_suite1(void)
 {
@@ -87,28 +89,36 @@ void testMoving(void)
 
 void testBestPath(void)
 {
+   struct environment env;
+   cleanup(&env);
+   env.goal_x = 5;
+   env.goal_y = 2;
    fillLabyrinth(labyrinth);
    CU_ASSERT(labyrinth[0][0].actions == 2);
    CU_ASSERT(labyrinth[5][2].value == 0);
    CU_ASSERT(labyrinth[5][2].actions == 12);
 
-   calculateValues();
+   calculateValues(&env);
    CU_ASSERT(labyrinth[0][0].value == 100);
    CU_ASSERT(labyrinth[3][1].value == 100);
 
    printLabyrinth(labyrinth);
-   cleanup();
+   cleanup(&env);
 }
 
 void testBestPathWithTraps(void)
 {
+   struct environment env;
+   cleanup(&env);
+   env.goal_x = 5;
+   env.goal_y = 2;
    fillLabyrinth(labyrinth);
    labyrinth[4][1].value = -99; // This field is a trap
    CU_ASSERT(labyrinth[0][0].actions == 2);
    CU_ASSERT(labyrinth[5][2].value == 0);
    CU_ASSERT(labyrinth[5][2].actions == 12);
 
-   calculateValues();
+   calculateValues(&env);
    CU_ASSERT(labyrinth[0][0].value == 100);
    // This should no longer be part of the optimal path
    CU_ASSERT(labyrinth[3][1].value == 0); 
@@ -116,7 +126,7 @@ void testBestPathWithTraps(void)
    CU_ASSERT(labyrinth[7][1].value == 100); 
 
    printLabyrinth(labyrinth);
-   cleanup();
+   cleanup(&env);
 }
 
 void testPhase1(void)
@@ -128,6 +138,14 @@ void testPhase1(void)
   doPhase1();
   printLabyrinth(labyrinth);
 }
+
+void testPhase2(void)
+{
+  printLabyrinth(labyrinth);
+  doPhase2();
+  printLabyrinth(labyrinth);
+}
+
 
 
 int main()
@@ -164,6 +182,12 @@ int main()
    }
 
    if (NULL == CU_add_test(pSuite, "test phase 1 (moving on left-hand rule and cartographing)", testPhase1))
+   {
+     CU_cleanup_registry();
+     return CU_get_error();
+   }
+
+   if (NULL == CU_add_test(pSuite, "test phase 2 (using A* to find best way back)", testPhase2))
    {
      CU_cleanup_registry();
      return CU_get_error();

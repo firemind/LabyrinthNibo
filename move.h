@@ -53,4 +53,51 @@ void turn_left() {
   }
 }
 
+void move_south() {
+  switch(current_direction){
+    case WEST:
+      turn_left(); break;
+    case EAST:
+      turn_right(); break;
+    case NORTH:
+      turn_right(); turn_right(); break;
+  }
+  move_forward();
+}
+
+void move_north() {
+  switch(current_direction){
+    case WEST:
+      turn_right(); break;
+    case EAST:
+      turn_left(); break;
+    case SOUTH:
+      turn_right(); turn_right(); break;
+  }
+  move_forward();
+}
+
+void move_west() {
+  switch(current_direction){
+    case EAST:
+      turn_right(); turn_right(); break;
+    case NORTH:
+      turn_left(); break;
+    case SOUTH:
+      turn_right(); break;
+  }
+  move_forward();
+}
+
+void move_east() {
+  switch(current_direction){
+    case WEST:
+      turn_right(); turn_right(); break;
+    case NORTH:
+      turn_right(); break;
+    case SOUTH:
+      turn_left(); break;
+  }
+  move_forward();
+}
 #endif /*MOVE_H*/
