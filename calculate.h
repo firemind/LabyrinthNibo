@@ -36,8 +36,9 @@ int calculateValues(struct environment *env){
     /*printf("next: %i, %i\n",n.x, n.y);*/
     /*printf("next: %i, %i\n",env->goal_x, env->goal_x);*/
     if (n.x == env->goal_x && n.y == env->goal_y){ 
+      int count = 100;
       while(next != NULL){
-         labyrinth[next->coord.x][next->coord.y].value = 100;
+         labyrinth[next->coord.x][next->coord.y].value = count--;
 
          next = next->parent;
       }
